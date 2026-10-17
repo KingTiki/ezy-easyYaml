@@ -16,7 +16,7 @@ EZY öffnet YAML-Vorlagen als Formular in Visual Studio Code. Felder auswählen,
 
 ## Installieren
 
-Veröffentlichte VSIX-Pakete stehen unter [Releases](https://github.com/KingTiki/ezy-public/releases) bereit. In VS Code **Extensions: Install from VSIX…** aufrufen und die heruntergeladene Datei auswählen. Nach einem Update **Developer: Reload Window** ausführen.
+Veröffentlichte VSIX-Pakete stehen unter [Releases](https://github.com/KingTiki/ezy-easyYaml/releases) bereit. In VS Code **Extensions: Install from VSIX…** aufrufen und die heruntergeladene Datei auswählen. Nach einem Update **Developer: Reload Window** ausführen.
 
 Alternativ aus dem Quellcode bauen; dafür sind Node.js ab 22 und npm erforderlich:
 
