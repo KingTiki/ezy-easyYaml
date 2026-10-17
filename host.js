@@ -52,7 +52,7 @@ function createController(vscode, context) {
   }
 
   async function confirmReplace() {
-    return !loaded || await vscode.window.showWarningMessage('Neue Vorlage laden? Der aktuelle EZY-Arbeitsstand wird verworfen.', { modal: true }, 'Vorlage wechseln') === 'Vorlage wechseln';
+    return !loaded || await vscode.window.showWarningMessage('Andere Vorlage öffnen? Der aktuelle Arbeitsstand wird verworfen.', { modal: true }, 'Vorlage wechseln') === 'Vorlage wechseln';
   }
 
   async function chooseFile() {
