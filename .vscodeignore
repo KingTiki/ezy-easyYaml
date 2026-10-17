@@ -1,0 +1,13 @@
+.vscode/**
+.github/**
+.artifacts/**
+example_yml*.yml
+test/**
+scripts/**
+node_modules/**
+package-lock.json
+.gitignore
+*.vsix
+media/app.js
+media/yaml-core.js
+media/webview.js

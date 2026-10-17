@@ -1,0 +1,75 @@
+{
+  "name": "ezy-easy-yaml",
+  "displayName": "EZY – Easy YAML",
+  "description": "Lokaler YAML-Konfigurator mit Auswahlfiltern und Live-Vorschau.",
+  "version": "0.1.2",
+  "publisher": "ezy-local",
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "main": "./extension.js",
+  "extensionKind": [
+    "workspace"
+  ],
+  "capabilities": {
+    "untrustedWorkspaces": {
+      "supported": true
+    }
+  },
+  "contributes": {
+    "commands": [
+      {
+        "command": "ezy.open",
+        "title": "EZY: Konfigurator öffnen"
+      },
+      {
+        "command": "ezy.openTemplate",
+        "title": "Mit EZY als Vorlage öffnen"
+      }
+    ],
+    "menus": {
+      "explorer/context": [
+        {
+          "command": "ezy.openTemplate",
+          "when": "resourceExtname =~ /\\.(yml|yaml)$/i",
+          "group": "navigation"
+        }
+      ],
+      "editor/context": [
+        {
+          "command": "ezy.openTemplate",
+          "when": "resourceExtname =~ /\\.(yml|yaml)$/i",
+          "group": "navigation"
+        }
+      ],
+      "commandPalette": [
+        {
+          "command": "ezy.openTemplate",
+          "when": "resourceExtname =~ /\\.(yml|yaml)$/i"
+        }
+      ]
+    }
+  },
+  "scripts": {
+    "build": "node scripts/build.cjs",
+    "vscode:prepublish": "npm run build",
+    "pretest": "npm run build",
+    "test": "node --test test/*.test.js",
+    "pretest:ui": "npm run build",
+    "test:ui": "node test/ui.cjs",
+    "pretest:integration": "npm run build",
+    "test:integration": "node scripts/test-integration.cjs",
+    "package": "vsce package --allow-missing-repository --no-rewrite-relative-links"
+  },
+  "devDependencies": {
+    "@vscode/vsce": "4.0.0",
+    "esbuild": "0.28.2"
+  },
+  "dependencies": {
+    "yaml": "2.9.1"
+  }
+}

@@ -1,0 +1,5 @@
+.artifacts/
+example_yml*.yml
+node_modules/
+*.vsix
+dist/

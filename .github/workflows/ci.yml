@@ -1,0 +1,96 @@
+name: Tests, Build und Release
+
+# Branches und Versions-Tags werden geprüft. Nur Tag-Pushes veröffentlichen.
+on:
+  push:
+    branches: ["**"]
+    tags: ["v*"]
+  pull_request:
+  workflow_dispatch:
+
+# Der Testjob benötigt ausschließlich Lesezugriff auf das Repository.
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Testen und paketieren
+    runs-on: windows-latest
+    timeout-minutes: 15
+    outputs:
+      version: ${{ steps.package_info.outputs.version }}
+
+    steps:
+      - name: Quellcode laden
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Node.js einrichten
+        uses: actions/setup-node@v7
+        with:
+          node-version: "22"
+          cache: npm
+
+      - name: Paketversion lesen und Release-Tag prüfen
+        id: package_info
+        shell: pwsh
+        run: |
+          $package = Get-Content -Raw package.json | ConvertFrom-Json
+          "version=$($package.version)" >> $env:GITHUB_OUTPUT
+          if ($env:GITHUB_REF_TYPE -eq 'tag') {
+            if ($env:GITHUB_REF_NAME -notmatch '^v[0-9]+\.[0-9]+\.[0-9]+$') {
+              throw 'Release-Tags müssen dem Format v1.2.3 entsprechen.'
+            }
+            if ($env:GITHUB_REF_NAME -cne "v$($package.version)") {
+              throw 'Release-Tag und Version in package.json stimmen nicht überein.'
+            }
+          }
+
+      - name: Abhängigkeiten installieren
+        run: npm ci
+
+      - name: Core und Host prüfen
+        run: npm test
+
+      - name: Oberfläche in Chrome prüfen
+        run: npm run test:ui
+
+      - name: VSIX bauen
+        run: npm run package
+
+      - name: VSIX als Build-Artefakt speichern
+        uses: actions/upload-artifact@v7
+        with:
+          name: ezy-extension
+          path: ezy-easy-yaml-${{ steps.package_info.outputs.version }}.vsix
+          if-no-files-found: error
+          retention-days: 14
+
+  release:
+    name: GitHub-Release veröffentlichen
+    needs: build
+    if: github.event_name == 'push' && github.ref_type == 'tag' && startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write
+
+    steps:
+      - name: Geprüftes VSIX herunterladen
+        uses: actions/download-artifact@v8
+        with:
+          name: ezy-extension
+          path: release-package
+
+      - name: Release mit VSIX und Release Notes erstellen
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_VERSION: ${{ needs.build.outputs.version }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" \
+            "release-package/ezy-easy-yaml-$RELEASE_VERSION.vsix" \
+            --repo "$GITHUB_REPOSITORY" \
+            --verify-tag \
+            --generate-notes \
+            --title "EZY $GITHUB_REF_NAME"

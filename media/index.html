@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>EZY - Easy YAML · Konfigurator</title>
+  <link rel="stylesheet" href="styles.css">
+  <script defer src="../dist/webview.js"></script>
+</head>
+<body>
+  <header class="masthead">
+    <span class="brand" aria-label="EZY - Easy YAML Startseite"><strong>EZY</strong><span> - Easy YAML</span></span>
+    <div class="header-actions"><span class="local-badge"><span></span> Lokal & offline</span>
+      <button id="load-template" type="button" class="button primary"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 16V4m-4 4 4-4 4 4M4 15v5h16v-5"/></svg> Vorlage laden</button>
+    </div>
+  </header>
+  <main>
+    <section class="intro">
+      <div><p class="eyebrow">DEINE VORLAGE. DEINE KONFIGURATION.</p><h1>Deine Konfiguration.<br><em>Übersichtlich bearbeitet.</em></h1><p class="subtitle">Vorlage laden, bestehende Konfiguration übernehmen und Optionen anpassen.</p></div>
+
+    </section>
+
+    <div id="message" class="message" role="alert" hidden></div>
+    <section id="drop-zone" class="drop-zone" aria-label="YAML-Vorlage laden">
+      <div class="upload-art" aria-hidden="true"><span class="art-label">.yml</span><div class="art-code"><span>app:</span><span>  enabled: <i>true</i></span><span>  config: <i>easy</i></span></div><span class="art-check">✓</span></div>
+      <h2>Hier beginnt deine Konfiguration.</h2>
+      <p><button id="load-template-start" type="button" class="button primary">YAML-Vorlage wählen</button></p>
+      <p class="muted small">Wähle eine .yml- oder .yaml-Datei.<br>Deine Datei bleibt auf deinem Rechner.</p>
+      <div class="empty-steps"><span><b>01</b> Vorlage laden</span><span><b>02</b> Optionen auswählen</span><span><b>03</b> YAML exportieren</span></div>
+    </section>
+
+    <section id="workspace" hidden>
+      <div class="file-bar"><div><span class="file-tag">YAML</span><strong id="source-name"></strong><span id="source-meta" class="muted small"></span></div><div><button id="import-export" class="button subtle" type="button">Bestehende Konfiguration laden</button><span id="import-name" class="muted small" role="status"></span><button id="start-over" class="button subtle" type="button" title="Vorlage und Arbeitsstand verwerfen">Zur Startseite</button><button id="reset" class="button subtle" type="button">Änderungen zurücksetzen</button></div></div>
+      <div class="workspace-grid">
+        <section class="editor-panel" aria-label="Konfigurationsoptionen">
+          <div class="panel-heading"><div><h2><span class="section-number">01</span> Optionen</h2><p class="muted small">Ausgewählte Optionen werden übernommen. Hier kannst du Werte ändern und weitere Optionen ergänzen.</p></div><span id="selection-count" class="count-badge" aria-live="polite">0 ausgewählt</span></div>
+          <div class="toolbar"><label class="search-box"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 4 4"/></svg><input id="search" type="search" placeholder="Nach Option oder Pfad suchen …" aria-label="Optionen durchsuchen"></label><button id="expand-all" class="icon-button" type="button" title="Alle Gruppen öffnen" aria-label="Alle Gruppen öffnen"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m8 7 4-4 4 4M8 17l4 4 4-4M4 12h16"/></svg></button><button id="collapse-all" class="icon-button" type="button" title="Alle Gruppen schließen" aria-label="Alle Gruppen schließen"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m8 3 4 4 4-4M8 21l4-4 4 4M4 12h16"/></svg></button></div>
+          <div class="selection-filters" role="group" aria-label="Optionen nach Auswahl filtern">
+            <button class="button subtle" type="button" data-selection-filter="all" aria-pressed="true">Alle</button>
+            <button class="button subtle" type="button" data-selection-filter="selected" aria-pressed="false">Angewählte</button>
+            <button class="button subtle" type="button" data-selection-filter="unselected" aria-pressed="false">Nicht angewählte</button>
+          </div>
+          <div class="select-tools"><button id="select-all" type="button">Alle auswählen</button><span>·</span><button id="select-none" type="button">Keine auswählen</button></div>
+          <div id="fields" class="fields"></div>
+          <p id="no-results" class="muted no-results" hidden>Keine passenden Optionen gefunden.</p>
+        </section>
+        <aside class="preview-panel" aria-label="YAML-Vorschau und Speichern">
+          <div class="panel-heading"><div><h2><span class="section-number">02</span> YAML-Vorschau</h2><p class="muted small">Zeigt den aktuellen Stand deiner Konfiguration.</p></div><span class="live-badge"><span></span> Live</span></div>
+          <div class="preview-title"><span id="preview-filename">config.yml</span><button id="copy" class="copy-button" type="button" disabled>Kopieren</button></div>
+          <div class="code-area"><pre id="preview" tabindex="0" aria-label="YAML-Vorschau"># Wähle links die ersten Optionen aus.</pre></div>
+          <div id="export-error" class="export-error" role="status" hidden></div>
+          <div class="export-controls"><label for="filename">Dateiname</label><input id="filename" type="text" value="config.yml" spellcheck="false"><button id="download" class="button primary download-button" type="button" disabled><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v12m-4-4 4 4 4-4M4 16v4h16v-4"/></svg><span id="download-label">Speichern unter …</span></button><p id="save-hint" class="muted small">Nur ausgewählte Optionen werden exportiert.</p></div>
+        </aside>
+      </div>
+    </section>
+    <footer><span>EZY - Easy YAML <span class="footer-dot">/</span> Klar konfigurieren.</span><span>VS Code · Lokal & offline</span></footer>
+  </main>
+  <div id="toast" class="toast" role="status" hidden></div>
+</body>
+</html>

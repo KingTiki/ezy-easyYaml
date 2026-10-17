@@ -1,0 +1,10 @@
+{
+  "version": "0.2.0",
+  "configurations": [{
+    "name": "EZY Extension Development Host",
+    "type": "extensionHost",
+    "request": "launch",
+    "preLaunchTask": "npm: build",
+    "args": ["--extensionDevelopmentPath=${workspaceFolder}"]
+  }]
+}

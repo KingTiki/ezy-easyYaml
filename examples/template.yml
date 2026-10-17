@@ -1,0 +1,38 @@
+# Generic YAML example for the offline configurator.
+logging:
+  level:
+    root: warn
+    "app.worker": debug
+    "app.http": info
+app:
+  # Optional public address
+  baseURL: https://example.org
+  feature:
+    search: true
+    notifications: true
+    'dark-mode': true
+  security:
+    credentials:
+      users:
+        reader:
+          # Example value only
+          password: "replace-me"
+          # password: "local-demo"
+        editor:
+          password: "replace-me-too"
+    headers:
+      allowed-origin: "https://example.org"
+  storage:
+    cache:
+      strategy: memory
+    paths:
+      data: '${app.configDir}/data'
+resources:
+  enabled: true
+  name: '${app.name}-resources'
+  files:
+    - defaults.yml
+    - '${app.configDir}/custom.yml'
+output:
+  formats:
+    default: yaml
