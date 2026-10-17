@@ -1,62 +1,51 @@
-# EZY – Easy YAML für VS Code
+# EZY – YAML übersichtlich bearbeiten
 
-EZY macht YAML-Vorlagen als Formular bearbeitbar: Felder auswählen, Werte anpassen und das Ergebnis direkt in der Live-Vorschau prüfen. Bestehende Konfigurationen lassen sich als Arbeitsstand übernehmen und ergänzen.
+EZY öffnet YAML-Vorlagen als Formular in Visual Studio Code. Felder auswählen, Werte anpassen und direkt sehen, welche YAML gespeichert wird. Bestehende Konfigurationen lassen sich importieren und gezielt ergänzen.
 
-Alles läuft lokal in VS Code – ohne Server, externe Ressourcen oder Telemetrie. Unterstützt wird Desktop-VS-Code ab Version 1.85.
+**Lokal und offline.** Ohne Konto, Server oder Telemetrie. Für Desktop-VS-Code ab Version 1.85.
 
-## Funktionen
+![EZY mit ausgewählten Formularfeldern links und der zugehörigen YAML-Vorschau rechts](docs/images/ezy-editor.png)
 
-- Verschachtelte Felder und Listen bearbeiten.
-- Nur ausgewählte Optionen exportieren.
-- Optionen nach Namen, Pfaden, Hilfetexten und Auswahl filtern.
-- Kommentare aus der Vorlage als Hilfetext anzeigen.
-- YAML speichern oder in die Zwischenablage kopieren.
+## Was EZY kann
 
-Zum Beispiel: Aus dieser Vorlage nur `enabled` auswählen und auf `false` setzen:
+- **Gezielt konfigurieren:** Nur ausgewählte Felder und ihre benötigten Eltern werden gespeichert.
+- **Werte bequem bearbeiten:** Text, Zahlen, Boolean-Werte, verschachtelte Gruppen und Listen.
+- **Den Überblick behalten:** Suche und Auswahlfilter helfen auch bei umfangreichen Vorlagen.
+- **Hinweise direkt am Feld:** Kommentare aus der Vorlage bleiben als Hilfetext sichtbar.
+- **Ergebnis direkt mitnehmen:** Als YAML-Datei speichern oder in die Zwischenablage kopieren.
 
-```yaml
-app:
-  enabled: true
-  port: 8080
-```
+## Installieren
 
-Die Ausgabe enthält nur das ausgewählte Feld und sein Elternobjekt:
+Veröffentlichte VSIX-Pakete stehen unter [Releases](https://github.com/KingTiki/ezy-public/releases) bereit. In VS Code **Extensions: Install from VSIX…** aufrufen und die heruntergeladene Datei auswählen. Nach einem Update **Developer: Reload Window** ausführen.
 
-```yaml
-app:
-  enabled: false
-```
-
-## Installation und Schnellstart
-
-Aktuell wird EZY als lokales VSIX installiert; eine Marketplace-Version gibt es noch nicht. Zum Bauen werden Node.js ab 22 und npm benötigt:
+Alternativ aus dem Quellcode bauen; dafür sind Node.js ab 22 und npm erforderlich:
 
 ```sh
 npm ci
 npm run package
 ```
 
-1. In VS Code **Extensions: Install from VSIX…** aufrufen und das erzeugte `ezy-easy-yaml-<Version>.vsix` auswählen. Nach einem Update **Developer: Reload Window** ausführen.
-2. **EZY: Konfigurator öffnen** ausführen oder eine YAML-Datei rechts anklicken und **Mit EZY als Vorlage öffnen** wählen.
-3. Eine Vorlage laden, zum Beispiel [examples/template.yml](examples/template.yml). Optional **Bestehende Konfiguration laden** wählen.
-4. Felder auswählen, Werte bearbeiten und über **Speichern unter …** oder **Kopieren** exportieren.
+Das Paket `ezy-easy-yaml-<Version>.vsix` liegt anschließend im Projektordner. Eine Marketplace-Veröffentlichung gibt es derzeit nicht.
 
-Mehr zur Bedienung: [Felder, Listen, Kommentare und Arbeitsstand](docs/BEDIENUNG.md).
+## In vier Schritten zur Konfiguration
 
-## Grenzen
+1. **EZY: Konfigurator öffnen** in der Befehlspalette ausführen. Eine YAML-Datei lässt sich auch per Rechtsklick **Mit EZY als Vorlage öffnen**.
+2. **Vorlage öffnen** wählen, zum Beispiel [examples/template.yml](examples/template.yml).
+3. Felder auswählen und Werte bearbeiten. Über **Konfiguration importieren** kann eine vorhandene Datei als Arbeitsstand übernommen werden.
+4. Vorschau prüfen und **Speichern unter …** oder **Kopieren** wählen.
 
-- Kommentare und ursprüngliche Formatierung werden nicht exportiert. Auskommentierte Optionen bleiben Hilfetext.
-- Kein Autosave und keine Sitzungswiederherstellung nach dem Schließen des EZY-Tabs. Externe Dateiänderungen müssen erneut geladen werden.
-- Ein YAML-Dokument mit Objektwurzel, höchstens 5 MB. Anker, Aliase und benutzerdefinierte Tags werden nicht unterstützt.
+Die Vorlage wird nicht automatisch überschrieben. Die vollständige [Bedienungsanleitung](docs/BEDIENUNG.md) beschreibt Listen, Filter und Arbeitsstand.
 
-Weitere Details: [Unterstützte Vorlagen](docs/BEDIENUNG.md#unterstützte-vorlagen).
+## Gut zu wissen
+
+- Kommentare und ursprüngliche Formatierung werden nicht mitgespeichert. Auskommentierte Felder bleiben Hilfetext.
+- Der Arbeitsstand bleibt beim Tabwechsel erhalten. Beim Schließen des EZY-Tabs endet die Sitzung; es gibt kein Autosave.
+- Unterstützt wird ein YAML-Dokument mit Objektwurzel bis 5 MB. Anker, Aliase und benutzerdefinierte Tags werden nicht unterstützt. [Alle Formatgrenzen](docs/BEDIENUNG.md#unterstützte-vorlagen)
 
 ## Entwicklung
 
-Nach `npm ci` das Repository in VS Code öffnen und F5 drücken. Der Development Host baut die Webview automatisch. `npm test` prüft Kern und Host; `npm run test:ui` prüft die Oberfläche in Chrome.
-
-[Entwicklungsumgebung, Architektur, Kern-API und Tests](docs/ENTWICKLUNG.md)
+Nach `npm ci` startet F5 den Extension Development Host mit automatischem Build. Details zu [Architektur und Tests](docs/ENTWICKLUNG.md), [CI und Releases](docs/CI.md) sowie [Screenshot und Icon](docs/GRAFIKDATEIEN.md).
 
 ## Lizenz
 
-[MIT](LICENSE). Die Lizenzhinweise mitgelieferter Abhängigkeiten bleiben erhalten.
+Dieses Projekt steht unter der [MIT-Lizenz](LICENSE).

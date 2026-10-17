@@ -53,7 +53,9 @@ async function navigate(file) {
 }
 async function screenshot(name) {
   const result = await command('Page.captureScreenshot', { format: 'png', captureBeyondViewport: false });
-  fs.writeFileSync(path.join(artifacts, name), Buffer.from(result.data, 'base64'));
+  const destination = path.isAbsolute(name) ? name : path.join(artifacts, name);
+  fs.mkdirSync(path.dirname(destination), { recursive: true });
+  fs.writeFileSync(destination, Buffer.from(result.data, 'base64'));
 }
 async function fileInput(file, selector = '#file-input') {
   const document = await command('DOM.getDocument');
@@ -132,6 +134,11 @@ async function main() {
   await evaluate('document.getElementById("start-over").click()');
   await until(()=>evaluate('!document.body.classList.contains("has-template")'),'return to start');
   check('Start resets template, fields, preview and filename',await evaluate('document.getElementById("workspace").hidden&&!document.getElementById("drop-zone").hidden&&!document.querySelector("[data-node-id]")&&document.getElementById("filename").value==="config.yml"&&document.getElementById("download").disabled&&document.getElementById("import-name").textContent===""'));
+  await screenshot('extension-start-desktop.png');
+  await command('Emulation.setDeviceMetricsOverride',{width:390,height:1000,deviceScaleFactor:1,mobile:false});
+  check('Start page without horizontal overflow',await evaluate('document.documentElement.scrollWidth<=innerWidth'));
+  await screenshot('extension-start-mobile.png');
+  await command('Emulation.setDeviceMetricsOverride',{width:1440,height:1100,deviceScaleFactor:1,mobile:false});
   await evaluate('fileResponse='+file('fresh: true\n')+';document.getElementById("load-template-start").click()');
   await until(()=>evaluate('document.body.classList.contains("has-template")'),'fresh template');
   check('New template after reset starts without import or filters',await evaluate('document.getElementById("selection-count").textContent==="0 ausgewählt"&&document.querySelector("[data-selection-filter=all]").getAttribute("aria-pressed")==="true"&&document.getElementById("filename").value==="config.yml"'));
@@ -141,6 +148,26 @@ async function main() {
   await evaluate('window.dispatchEvent(new MessageEvent("message",{data:{type:"template",file:'+file('fromContext: true\n')+'}}))');
   await until(()=>evaluate('document.querySelector(".field-key")?.textContent==="fromContext"'),'context template');
   check('Context-menu template message loads a new template',await evaluate('document.querySelectorAll(".field").length===1&&document.getElementById("selection-count").textContent==="0 ausgewählt"&&testRequests.at(-1).type==="templateLoaded"'));
+  if (process.env.EZY_SCREENSHOT_OUT) {
+    await evaluate('document.getElementById("start-over").click()');
+    await until(()=>evaluate('!document.body.classList.contains("has-template")'),'screenshot reset');
+    const demo = 'app:\n  # Der Name der Anwendung.\n  name: Mein Projekt\n  # Anwendung beim Start aktivieren.\n  enabled: true\n  # Port für lokale Verbindungen.\n  port: 8080\nlogging:\n  level: info\n';
+    const payload = { name: 'vorlage.yml', size: Buffer.byteLength(demo), text: demo };
+    await command('Emulation.setDeviceMetricsOverride', {width:1440,height:1040,deviceScaleFactor:1,mobile:false});
+    await evaluate('saveError=null;cancelSave=false;fileResponse='+JSON.stringify(payload)+';document.getElementById("load-template-start").click()');
+    await until(()=>evaluate('document.getElementById("source-name").textContent==="vorlage.yml"'),'screenshot template');
+    await evaluate('document.querySelector("summary input[data-select-id]").click();const groups=document.querySelectorAll("#fields > details");groups[1].open=false;document.getElementById("filename").value="meine-konfiguration.yml";document.getElementById("filename").dispatchEvent(new Event("input"));document.activeElement.blur();scrollTo(0,0)');
+    await until(()=>evaluate('document.getElementById("preview").textContent.includes("Mein Projekt")'),'screenshot preview');
+    await screenshot(process.env.EZY_SCREENSHOT_OUT);
+    console.log('Saved README screenshot.');
+  }
+  if (process.env.EZY_ICON_OUT) {
+    await command('Emulation.setDeviceMetricsOverride', {width:256,height:256,deviceScaleFactor:1,mobile:false});
+    await command('Emulation.setDefaultBackgroundColorOverride', {color:{r:0,g:0,b:0,a:0}});
+    await navigate('assets/icon.svg');
+    await screenshot(process.env.EZY_ICON_OUT);
+    console.log('Saved 256px extension icon.');
+  }
   check('No browser exceptions',exceptions.length===0);
   fs.writeFileSync(path.join(artifacts,'extension-ui-result.json'),JSON.stringify({passed:true,checks},null,2));
   console.log('PASS '+checks.length+' extension UI checks');

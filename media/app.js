@@ -248,7 +248,7 @@
     if (selection.root.hints.length) fragment.append(element('p', 'group-hint', selection.root.hints.join('\n\n')));
     selection.root.children.forEach(node => fragment.append(renderNode(node, selection.root, 0)));
     if (!selection.root.children.length) {
-      fragment.append(element('p', 'group-hint', 'Die Vorlage enthält noch keine Felder.'));
+      fragment.append(element('p', 'group-hint', 'Diese Vorlage enthält keine aktiven Felder.'));
       fragment.append(addRow(selection.root));
     }
     $('fields').replaceChildren(fragment);
@@ -299,7 +299,7 @@
     output = '';
     try { output = core.serializeSelection(template, selection); }
     catch (failure) { error = failure.message; }
-    $('preview').textContent = error ? '# Bitte die markierten Eingaben korrigieren.' : output || '# Wähle links die ersten Optionen aus.';
+    $('preview').textContent = error ? '# Bitte die markierten Eingaben korrigieren.' : output || '# Felder auswählen, um YAML zu erzeugen.';
     try { $('preview-filename').textContent = effectiveFilename(); }
     catch (failure) { if (!error) error = failure.message; }
     $('filename').setAttribute('aria-invalid', String(!isValidFilename()));
@@ -307,7 +307,7 @@
     $('export-error').hidden = !error;
     $('download-label').textContent = 'Speichern unter …';
     $('download').disabled = !output || !!error;
-    $('save-hint').textContent = importedText === null ? 'Nur ausgewählte Optionen werden exportiert.' : 'Wähle den Speicherort für deine aktualisierte Konfiguration.';
+    $('save-hint').textContent = importedText === null ? 'Nur ausgewählte Felder werden gespeichert.' : 'Speichert den aktuellen Arbeitsstand am gewählten Ziel.';
     $('copy').disabled = !output;
   }
 
@@ -372,7 +372,7 @@
       document.body.classList.add('has-template');
       $('source-name').textContent = file.name;
       const status = core.getStatus(selection.root, selection);
-      $('source-meta').textContent = status.total + ' Optionen erkannt';
+      $('source-meta').textContent = status.total + ' Felder';
       renderFields(false);
       updatePreview();
       vscode.postMessage({ type: 'templateLoaded' });
@@ -393,13 +393,13 @@
       selection = nextSelection;
       importedText = text;
       $('filename').value = file.name;
-      $('import-name').textContent = 'Basis: ' + file.name;
+      $('import-name').textContent = 'Importiert: ' + file.name;
       $('message').hidden = true;
       $('search').value = '';
       openGroups.clear();
       renderFields(false);
       updatePreview();
-      toast('Konfiguration geladen. Vorhandene Optionen und Werte übernommen.');
+      toast('Konfiguration importiert.');
     } catch (error) { if (version === loadVersion) showError(error); }
   }
 
@@ -436,7 +436,7 @@
       $('filename').value = 'config.yml';
       $('filename').setAttribute('aria-invalid', 'false');
       $('preview-filename').textContent = 'config.yml';
-      $('preview').textContent = '# Wähle links die ersten Optionen aus.';
+      $('preview').textContent = '# Felder auswählen, um YAML zu erzeugen.';
       $('export-error').hidden = true;
       $('export-error').textContent = '';
       $('download').disabled = true;
@@ -453,7 +453,7 @@
   });
   $('import-export').addEventListener('click', () => pickFile('openConfig'));
   document.addEventListener('dragover', event => event.preventDefault());
-  document.addEventListener('drop', event => { event.preventDefault(); toast('Bitte „Vorlage laden“ verwenden.'); });
+  document.addEventListener('drop', event => { event.preventDefault(); toast('Dateien über „Vorlage öffnen“ laden.'); });
   $('search').addEventListener('input', applySearch);
   $('filename').addEventListener('input', () => { if (selection) updatePreview(); });
   $('select-all').addEventListener('click', () => { core.setSelected(selection, selection.root.id, true); updateSelection(); updatePreview(); });
@@ -478,7 +478,7 @@
     if (!output) return;
     try {
       const result = await request('copy', { text: output });
-      if (result?.copied) toast('YAML in die Zwischenablage kopiert.');
+      if (result?.copied) toast('YAML kopiert.');
     } catch (error) { showError(error); }
   });
   request('ready').catch(showError);

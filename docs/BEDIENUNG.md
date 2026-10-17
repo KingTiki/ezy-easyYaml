@@ -6,7 +6,7 @@
 
 Eine Vorlage definiert die verfügbaren Felder, ihre Struktur und Beispielwerte. Nach dem Laden sind zunächst keine Felder ausgewählt. Eine Beispielvorlage liegt unter [examples/template.yml](../examples/template.yml).
 
-**Bestehende Konfiguration laden** übernimmt eine YAML-Datei als Arbeitsstand. Vorhandene Felder werden ausgewählt und ihre Werte geladen. Zusätzliche Felder bleiben erhalten; weitere Vorlagenfelder bleiben ergänzbar. Listen werden vollständig aus der importierten Konfiguration übernommen.
+**Konfiguration importieren** übernimmt eine YAML-Datei als Arbeitsstand. Vorhandene Felder werden ausgewählt und ihre Werte geladen. Zusätzliche Felder bleiben erhalten; weitere Vorlagenfelder bleiben ergänzbar. Listen werden vollständig aus der importierten Konfiguration übernommen.
 
 Dateien werden über die Dateidialoge oder den VS-Code-Befehl **Mit EZY als Vorlage öffnen** geladen. Drag-and-drop wird nicht unterstützt.
 
@@ -26,7 +26,7 @@ Für leere Listen kann der Typ neuer Einträge gewählt werden. Neu angelegte Ob
 
 ## Suche und Filter
 
-Die Suche berücksichtigt Namen, Pfade und Hilfetexte. Die Filter **Alle**, **Angewählte** und **Nicht angewählte** können mit der Suche kombiniert werden. Suche und Filter verändern die Auswahl nicht.
+Die Suche berücksichtigt Namen, Pfade und Hilfetexte. Die Filter **Alle**, **Ausgewählt** und **Nicht ausgewählt** können mit der Suche kombiniert werden. Suche und Filter verändern die Auswahl nicht.
 
 ## Kommentare als Hilfetext
 

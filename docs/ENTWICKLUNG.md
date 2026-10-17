@@ -120,7 +120,9 @@ Der Build erzeugt außerdem `dist/THIRD_PARTY_LICENSES.txt` aus den Metadaten un
 
 `.gitignore` steuert die Git-Ausnahmen, `.vscodeignore` den Paketinhalt. Das VSIX enthält Host-Code, Manifest, HTML, CSS, Bundle, Dokumentation, Beispielvorlage und Lizenzhinweise. Tests, Entwicklungswerkzeuge und bereits gebündelte Webview-JavaScript-Sourcen werden ausgeschlossen.
 
-Die Paketierung verwendet `--no-rewrite-relative-links`. Bei Festlegung einer öffentlichen Repository-URL sind Repository-Metadaten und Link-Umschreibung entsprechend zu konfigurieren.
+Die Paketierung verwendet die öffentliche Repository-URL und `--githubBranch main`, um relative README-Links für die Anzeige in VS Code aufzulösen.
+
+Screenshot- und Icon-Quellen sowie deren Erzeugung sind in [Grafikdateien](GRAFIKDATEIEN.md) dokumentiert.
 
 ## Lizenz
 

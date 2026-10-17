@@ -1,0 +1,10 @@
+<svg width="256" height="256" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title">
+  <title id="title">EZY – Easy YAML</title>
+  <rect width="128" height="128" rx="28" fill="#1A1712"/>
+  <text x="18" y="64" font-family="Arial, sans-serif" font-weight="800" font-size="44" letter-spacing="-1" fill="#F5EFE6">EZY</text>
+  <circle cx="117" cy="57" r="7" fill="#E8A25A"/>
+  <g fill="#E8A25A">
+    <rect x="18" y="82" width="52" height="9" rx="4.5"/>
+    <rect x="34" y="100" width="36" height="9" rx="4.5"/>
+  </g>
+</svg>

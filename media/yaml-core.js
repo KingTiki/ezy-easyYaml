@@ -183,9 +183,9 @@ import { Composer, Parser, LineCounter, isMap, isSeq, isAlias, Document, YAMLMap
   }
 
   function importExport(template, text) {
-    if (typeof text !== 'string' || text.length > 5 * 1024 * 1024) throw new ConfigurationError('Der Export muss YAML-Text mit höchstens 5 MB enthalten.');
+    if (typeof text !== 'string' || text.length > 5 * 1024 * 1024) throw new ConfigurationError('Die Konfiguration muss YAML-Text mit höchstens 5 MB enthalten.');
     const ast = parseDocument(text.replace(/^\uFEFF/, '').replace(/\r\n?/g, '\n'));
-    if (ast.kind !== 'mapping') throw new ConfigurationError('Der Export muss ein YAML-Objekt als Wurzel enthalten.');
+    if (ast.kind !== 'mapping') throw new ConfigurationError('Die Konfiguration muss ein YAML-Objekt als Wurzel enthalten.');
     const selection = createInitialSelection(template);
     function merge(parent, values) {
       Object.keys(values).forEach(key => {
@@ -312,7 +312,7 @@ import { Composer, Parser, LineCounter, isMap, isSeq, isAlias, Document, YAMLMap
   }
 
   function serializeSelection(template, selection) {
-    if (!template || !selection) throw new ConfigurationError('Bitte zuerst eine Vorlage laden.');
+    if (!template || !selection) throw new ConfigurationError('Bitte zuerst eine Vorlage öffnen.');
     const keyOrder = new WeakMap();
     function selectedValue(node) {
       const field = selection.fields[node.id];
